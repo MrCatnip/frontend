@@ -1,6 +1,7 @@
 const form = document.getElementById("user-form");
 const buttonSubmit = document.getElementById("submit-btn");
 const buttonClear = document.getElementById("clear");
+const inputAvatar = document.getElementById("avatar");
 const spanSuccess = document.getElementById("success");
 const spanError = document.getElementById("error");
 const inputs = form.querySelectorAll("input");
@@ -57,9 +58,14 @@ inputs.forEach((input) =>
   }),
 );
 
+inputAvatar.addEventListener("change", () => {
+  if (inputAvatar.files.length) buttonClear.disabled = false;
+  else buttonClear.disabled = true;
+});
+
 buttonClear.addEventListener("click", () => {
-  const avatar = document.getElementById("avatar");
-  avatar.value = "";
+  inputAvatar.value = "";
+  buttonClear.disabled = true;
   getHintSpan("avatar").style.display = "inline";
   getErrorSpan("avatar").style.display = "none";
 });
@@ -112,6 +118,7 @@ form.addEventListener("submit", async (e) => {
 
     if (data.success) {
       form.reset();
+      buttonClear.disabled = true;
       spanSuccess.style.display = "inline";
     } else if (data.errors) {
       spanError.textContent = Object.values(data.errors).join("\n");
@@ -126,7 +133,7 @@ form.addEventListener("submit", async (e) => {
     spanError.style.display = "inline";
   } finally {
     buttonSubmit.disabled = false;
-    buttonClear.disabled = false;
+    buttonClear.disabled = inputAvatar.files.length === 0;
     inputs.forEach((input) => (input.disabled = false));
     buttonSubmit.textContent = "Register";
   }

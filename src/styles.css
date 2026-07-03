@@ -36,3 +36,7 @@ form {
 #success {
   display: none;
 }
+
+#clear {
+  margin-top: 4px;
+}
