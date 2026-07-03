@@ -1,4 +1,4 @@
-# Vanilla Registration Form (mini validation harness?)
+# Vanilla Registration Form
 
 - ✅ Vanilla HTML, CSS & JavaScript, no frameworks, no build step
 - ✅ Client-side validation (per-field, runs on submit + live-clears on `input`)
