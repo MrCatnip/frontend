@@ -6,6 +6,8 @@ const inputs = form.querySelectorAll("input");
 
 const EMPTY_ERROR = "Write something buddy!";
 const WTF_ERROR = "What are you doing buddy?";
+const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+const MAX_SIZE_MB = 2;
 
 const getHintSpan = (id) => document.getElementById(`hint-${id}`);
 const getErrorSpan = (id) => document.getElementById(`error-${id}`);
@@ -29,12 +31,25 @@ const validateNumber = (numberText, min = 0, max = 150, pattern = /^\d+$/) => {
   return "";
 };
 
+const validateFile = (fileInput) => {
+  const file = fileInput.files[0];
+  if (!file) return "";
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    return "Unsupported file type!";
+  }
+  // Wouldn't hurt to also add the file header vs mime type comparison Ig
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    return `File is too large (max ${MAX_SIZE_MB} MB).`;
+  }
+  return "";
+};
+
 const VALIDATORS_MAP = {
   username: (input) => validateText(input, 20, /^[A-Za-z0-9_]+$/),
   first_name: (input) => validateText(input),
   last_name: (input) => validateText(input),
   age: (input) => validateNumber(input),
-  avatar: (input) => console.log(input),
+  avatar: (input) => validateFile(input),
 };
 
 inputs.forEach((input) =>
@@ -49,18 +64,17 @@ inputs.forEach((input) =>
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   let isValid = true;
 
   Object.keys(VALIDATORS_MAP).forEach((key) => {
     const input = document.getElementById(key);
     const hintSpan = document.getElementById(`hint-${key}`);
     const errorSpan = document.getElementById(`error-${key}`);
-    const message = VALIDATORS_MAP[key](input.value);
-
+    const message =
+      input.type === "file" ? VALIDATORS_MAP[key](input) : VALIDATORS_MAP[key](input.value);
     errorSpan.textContent = message;
     if (message) {
-      hintSpan.style.display = "hidden";
+      hintSpan.style.display = "none";
       errorSpan.style.display = "inline";
       isValid = false;
     }
@@ -75,6 +89,7 @@ form.addEventListener("submit", async (e) => {
   spanError.style.display = "none";
 
   const content = {
+    // just leave as is, too ugly if we extract from VALIDATORS
     username: form.elements.username.value.trim(),
     first_name: form.elements.first_name.value.trim(),
     last_name: form.elements.last_name.value.trim(),
