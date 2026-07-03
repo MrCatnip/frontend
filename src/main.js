@@ -4,7 +4,7 @@ const buttonClear = document.getElementById("clear");
 const inputAvatar = document.getElementById("avatar");
 const spanSuccess = document.getElementById("success");
 const spanError = document.getElementById("error");
-const inputsForm = form.querySelectorAll("input");
+const inputsForm = form.querySelectorAll('input:not([type="checkbox"])');
 const inputCheckbox = document.getElementById("skip-validation");
 
 let SKIP_VALIDATION = false;
