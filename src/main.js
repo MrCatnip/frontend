@@ -1,5 +1,6 @@
 const form = document.getElementById("user-form");
-const button = document.getElementById("submit-btn");
+const buttonSubmit = document.getElementById("submit-btn");
+const buttonClear = document.getElementById("clear");
 const spanSuccess = document.getElementById("success");
 const spanError = document.getElementById("error");
 const inputs = form.querySelectorAll("input");
@@ -56,6 +57,13 @@ inputs.forEach((input) =>
   }),
 );
 
+buttonClear.addEventListener("click", () => {
+  const avatar = document.getElementById("avatar");
+  avatar.value = "";
+  getHintSpan("avatar").style.display = "inline";
+  getErrorSpan("avatar").style.display = "none";
+});
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   let isValid = true;
@@ -76,9 +84,10 @@ form.addEventListener("submit", async (e) => {
 
   if (!isValid) return;
 
-  button.disabled = true;
+  buttonSubmit.disabled = true;
+  buttonClear.disabled = true;
   inputs.forEach((input) => (input.disabled = true));
-  button.textContent = "Loading...";
+  buttonSubmit.textContent = "Loading...";
   spanSuccess.style.display = "none";
   spanError.style.display = "none";
 
@@ -116,8 +125,9 @@ form.addEventListener("submit", async (e) => {
     spanError.textContent = "Start the server mate!";
     spanError.style.display = "inline";
   } finally {
-    button.disabled = false;
+    buttonSubmit.disabled = false;
+    buttonClear.disabled = false;
     inputs.forEach((input) => (input.disabled = false));
-    button.textContent = "Register";
+    buttonSubmit.textContent = "Register";
   }
 });
