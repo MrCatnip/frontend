@@ -85,8 +85,8 @@ form.addEventListener("submit", async (e) => {
 
     Object.keys(VALIDATORS_MAP).forEach((key) => {
       const input = document.getElementById(key);
-      const hintSpan = document.getElementById(`hint-${key}`);
-      const errorSpan = document.getElementById(`error-${key}`);
+      const hintSpan = getHintSpan(key);
+      const errorSpan = getErrorSpan(key);
       const message =
         input.type === "file" ? VALIDATORS_MAP[key](input) : VALIDATORS_MAP[key](input.value);
       errorSpan.textContent = message;
