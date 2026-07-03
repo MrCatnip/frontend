@@ -11,6 +11,8 @@ Demo feature: a user registration form (username / first / last name / age /
 avatar) validated field-by-field, submitting JSON via `fetch` and rendering the
 `{ success, message }` response inline.
 
+> **Note:** you might wanna bootstrap https://github.com/MrCatnip/backend/ to view responses.
+
 **Time spent:** ~3 hrs (it's tuff without AI)
 
 ## Assumptions / Notes / About Me
