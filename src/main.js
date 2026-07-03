@@ -25,7 +25,7 @@ const validateNumber = (numberText, min = 0, max = 150, pattern = /^\d+$/) => {
   if (number === "") return EMPTY_ERROR;
   if (!pattern.test(number)) return WTF_ERROR;
   const n = Number(number);
-  if (n < min || n > max) return `Age must be between ${min} and ${max}.`;
+  if (n < min || n > max) return `Must be between ${min} and ${max}.`;
   return "";
 };
 
