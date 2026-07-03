@@ -25,22 +25,16 @@ const validateNumber = (numberText, min = 0, max = 150, pattern = /^\d+$/) => {
   if (number === "") return EMPTY_ERROR;
   if (!pattern.test(number)) return WTF_ERROR;
   const n = Number(number);
-  if (n < min || n > max) {
-    return `Age must be between ${min} and ${max}.`;
-  }
+  if (n < min || n > max) return `Age must be between ${min} and ${max}.`;
   return "";
 };
 
 const validateFile = (fileInput) => {
   const file = fileInput.files[0];
   if (!file) return "";
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    return "Unsupported file type!";
-  }
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) return "Unsupported file type!";
   // Wouldn't hurt to also add the file header vs mime type comparison Ig
-  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-    return `File is too large (max ${MAX_SIZE_MB} MB).`;
-  }
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) return `File is too large (max ${MAX_SIZE_MB} MB).`;
   return "";
 };
 
