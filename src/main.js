@@ -4,7 +4,10 @@ const buttonClear = document.getElementById("clear");
 const inputAvatar = document.getElementById("avatar");
 const spanSuccess = document.getElementById("success");
 const spanError = document.getElementById("error");
-const inputs = form.querySelectorAll("input");
+const inputsForm = form.querySelectorAll("input");
+const inputCheckbox = document.getElementById("skip-validation");
+
+let SKIP_VALIDATION = false;
 
 const EMPTY_ERROR = "Write something buddy!";
 const WTF_ERROR = "What are you doing buddy?";
@@ -48,7 +51,7 @@ const VALIDATORS_MAP = {
   avatar: (input) => validateFile(input),
 };
 
-inputs.forEach((input) =>
+inputsForm.forEach((input) =>
   input.addEventListener("input", () => {
     const id = input.id;
     const hintSpan = getHintSpan(id);
@@ -57,6 +60,10 @@ inputs.forEach((input) =>
     errorSpan.style.display = "none";
   }),
 );
+
+inputCheckbox.addEventListener("change", () => {
+  SKIP_VALIDATION = inputCheckbox.checked;
+});
 
 inputAvatar.addEventListener("change", () => {
   if (inputAvatar.files.length) buttonClear.disabled = false;
@@ -72,27 +79,30 @@ buttonClear.addEventListener("click", () => {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  let isValid = true;
 
-  Object.keys(VALIDATORS_MAP).forEach((key) => {
-    const input = document.getElementById(key);
-    const hintSpan = document.getElementById(`hint-${key}`);
-    const errorSpan = document.getElementById(`error-${key}`);
-    const message =
-      input.type === "file" ? VALIDATORS_MAP[key](input) : VALIDATORS_MAP[key](input.value);
-    errorSpan.textContent = message;
-    if (message) {
-      hintSpan.style.display = "none";
-      errorSpan.style.display = "inline";
-      isValid = false;
-    }
-  });
+  if (!SKIP_VALIDATION) {
+    let isValid = true;
 
-  if (!isValid) return;
+    Object.keys(VALIDATORS_MAP).forEach((key) => {
+      const input = document.getElementById(key);
+      const hintSpan = document.getElementById(`hint-${key}`);
+      const errorSpan = document.getElementById(`error-${key}`);
+      const message =
+        input.type === "file" ? VALIDATORS_MAP[key](input) : VALIDATORS_MAP[key](input.value);
+      errorSpan.textContent = message;
+      if (message) {
+        hintSpan.style.display = "none";
+        errorSpan.style.display = "inline";
+        isValid = false;
+      }
+    });
+
+    if (!isValid) return;
+  }
 
   buttonSubmit.disabled = true;
   buttonClear.disabled = true;
-  inputs.forEach((input) => (input.disabled = true));
+  inputsForm.forEach((input) => (input.disabled = true));
   buttonSubmit.textContent = "Loading...";
   spanSuccess.style.display = "none";
   spanError.style.display = "none";
@@ -118,6 +128,7 @@ form.addEventListener("submit", async (e) => {
 
     if (data.success) {
       form.reset();
+      inputCheckbox.checked = SKIP_VALIDATION;
       buttonClear.disabled = true;
       spanSuccess.style.display = "inline";
     } else if (data.errors) {
@@ -134,7 +145,7 @@ form.addEventListener("submit", async (e) => {
   } finally {
     buttonSubmit.disabled = false;
     buttonClear.disabled = inputAvatar.files.length === 0;
-    inputs.forEach((input) => (input.disabled = false));
+    inputsForm.forEach((input) => (input.disabled = false));
     buttonSubmit.textContent = "Register";
   }
 });

@@ -29,6 +29,11 @@ form {
   display: none;
 }
 
+.checkbox-wrapper {
+  display: flex;
+  gap: 4px;
+}
+
 #age {
   max-width: 50px;
 }
